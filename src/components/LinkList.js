@@ -18,22 +18,17 @@ const FEED_QUERY = gql`
 
 class LinkList extends Component {
   render() {
-    const linksToRender = [
-      {
-        id: '1',
-        description: 'Prisma turns your database into a GraphQL API 😎',
-        url: 'https://www.prismagraphql.com',
-      },
-      {
-        id: '2',
-        description: 'The best GraphQL client',
-        url: 'https://www.apollographql.com/docs/react/',
-      },
-    ]
-
     return (
       <Query query={FEED_QUERY}>
-        {() => linksToRender.map(link => <Link key={link.id} link={link} />)}
+         {({ loading, error, data }) => {
+      if (loading) return <p>Loading...</p>;
+      if (error) return <p>Error :(</p>;
+        console.log(data.feed.links.length);
+
+      return data.feed.links.map(({description, url, id}) =>
+        <Link key={id} description={description} url={url} />
+      );
+    }}
       </Query>
     )
   }
